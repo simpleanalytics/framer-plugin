@@ -31,3 +31,6 @@ yarn-error.log\*
 # Packed plugin
 
 plugin.zip
+
+.idea
+.vscode
