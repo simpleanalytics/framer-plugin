@@ -1,4 +1,4 @@
-/* Your Plugin CSS */
+@import "tailwindcss";
 
 main {
     display: flex;
