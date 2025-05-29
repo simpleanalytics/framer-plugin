@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./framer.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -7,9 +8,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding: 0 15px 15px 15px;
   height: 100%;
-  gap: 15px;
 }
 
 @theme inline {
@@ -18,7 +17,7 @@ main {
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-foreground: var(--framer-color-text-primary);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -28,11 +27,11 @@ main {
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-foreground: var(--framer-color-text-secondary);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-border: var(--border);
+  --color-border: var(--framer-color-divider);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-chart-1: var(--chart-1);
