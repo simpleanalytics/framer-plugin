@@ -15,10 +15,15 @@ const DATA_ATTRIBUTES = [
 async function createCollectAttribute() {
   const options: string[] = [];
 
-  const collectDownloads = await framer.getPluginData("auto-event-partial-collect-downloads");
-  const collectOutboundLinks = await framer.getPluginData("auto-event-partial-collect-outbound-links");
-  const collectEmailClicks = await framer.getPluginData("auto-event-partial-collect-email-clicks");
-
+  const collectDownloads = await framer.getPluginData(
+    "auto-event-partial-collect-downloads",
+  );
+  const collectOutboundLinks = await framer.getPluginData(
+    "auto-event-partial-collect-outbound-links",
+  );
+  const collectEmailClicks = await framer.getPluginData(
+    "auto-event-partial-collect-email-clicks",
+  );
 
   if (collectDownloads) {
     options.push(collectDownloads);
@@ -62,7 +67,6 @@ async function createAutoEventsAttribute() {
     options.push(`data-full-urls=${fullUrls}`);
   }
 
-
   return options.length > 0 ? options.join(" ") : "";
 }
 
@@ -83,17 +87,25 @@ async function createDataAttributes() {
 export async function createScript() {
   const data = await createDataAttributes();
 
-  const domain = await framer.getPluginData("setting-custom-domain") ?? "scripts.simpleanalyticscdn.com";
-// https://scripts.simpleanalyticscdn.com/auto-events.js
+  const domain =
+    (await framer.getPluginData("setting-custom-domain")) ??
+    "scripts.simpleanalyticscdn.com";
+  // https://scripts.simpleanalyticscdn.com/auto-events.js
 
-  const scripts = [`<script async src="https://${domain}/latest.js" ${data}></script>`];
+  const scripts = [
+    `<script async src="https://${domain}/latest.js" ${data}></script>`,
+  ];
 
-  const autoCollectEvents = await framer.getPluginData("setting-auto-collect-events");
+  const autoCollectEvents = await framer.getPluginData(
+    "setting-auto-collect-events",
+  );
 
   if (autoCollectEvents !== "false") {
     const autoEventsAttribute = await createAutoEventsAttribute();
 
-    scripts.push(`<script async src="https://${domain}/auto-events.js" ${autoEventsAttribute}></script>`);
+    scripts.push(
+      `<script async src="https://${domain}/auto-events.js" ${autoEventsAttribute}></script>`,
+    );
   }
 
   return scripts.join("\n");

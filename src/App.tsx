@@ -30,7 +30,7 @@ export function App() {
       setSettings(settings);
     });
   }, []);
-  
+
   const isInstalled = customCode?.bodyEnd !== null;
 
   const updateScript = useCallback(async () => {
@@ -146,7 +146,9 @@ export function App() {
                   prev
                     ? {
                         ...prev,
-                        "setting-custom-domain": isDefault ? undefined : e.target.value,
+                        "setting-custom-domain": isDefault
+                          ? undefined
+                          : e.target.value,
                       }
                     : null,
                 );
@@ -162,7 +164,6 @@ export function App() {
         <Separator className="col-span-4" />
         <h2 className="text-lg font-semibold col-span-4">Advanced settings</h2>
         <div className="col-span-4 grid grid-cols-subgrid gap-4 pb-2">
-          
           <div className="col-span-4 grid grid-cols-subgrid gap-2">
             <div className="flex items-center gap-2 col-span-2">
               <Label htmlFor="data-collect-dnt">
@@ -205,7 +206,8 @@ export function App() {
             />
             <div className="col-span-4">
               <p className="text-muted-foreground text-xs">
-                Enable analytics for users with Do Not Track enabled. (default: off)
+                Enable analytics for users with Do Not Track enabled. (default:
+                off)
               </p>
             </div>
           </div>
@@ -230,12 +232,10 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="data-auto-collect"
-              defaultChecked={
-                settings?.["data-auto-collect"] !== "false"
-              }
+              defaultChecked={settings?.["data-auto-collect"] !== "false"}
               onChange={(e) => {
                 const isDefault = e.target.value === "true";
-                
+
                 setSettings((prev) =>
                   prev
                     ? {
@@ -282,7 +282,9 @@ export function App() {
                   prev
                     ? {
                         ...prev,
-                        "data-ignore-pages": isDefault ? undefined : e.target.value,
+                        "data-ignore-pages": isDefault
+                          ? undefined
+                          : e.target.value,
                       }
                     : null,
                 );
@@ -365,9 +367,7 @@ export function App() {
                   prev
                     ? {
                         ...prev,
-                        "data-mode": e.target.checked
-                          ? "hash"
-                          : undefined,
+                        "data-mode": e.target.checked ? "hash" : undefined,
                       }
                     : null,
                 );
@@ -409,14 +409,16 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="auto-event-partial-collect-outbound-links"
               defaultChecked={
-                settings?.["auto-event-partial-collect-outbound-links"] !== "false"
+                settings?.["auto-event-partial-collect-outbound-links"] !==
+                "false"
               }
               onChange={(e) => {
                 setSettings((prev) =>
                   prev
                     ? {
                         ...prev,
-                        "auto-event-partial-collect-outbound-links": e.target.checked
+                        "auto-event-partial-collect-outbound-links": e.target
+                          .checked
                           ? undefined
                           : "false",
                       }
@@ -454,14 +456,16 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="auto-event-partial-collect-email-clicks"
               defaultChecked={
-                settings?.["auto-event-partial-collect-email-clicks"] !== "false"
+                settings?.["auto-event-partial-collect-email-clicks"] !==
+                "false"
               }
               onChange={(e) => {
                 setSettings((prev) =>
                   prev
                     ? {
                         ...prev,
-                        "auto-event-partial-collect-email-clicks": e.target.checked
+                        "auto-event-partial-collect-email-clicks": e.target
+                          .checked
                           ? undefined
                           : "false",
                       }
@@ -522,7 +526,9 @@ export function App() {
           </div>
           <div className="col-span-4 grid grid-cols-subgrid gap-2">
             <div className="flex items-center gap-2 col-span-2">
-              <Label htmlFor="auto-event-data-extensions">Collect downloads extensions:</Label>
+              <Label htmlFor="auto-event-data-extensions">
+                Collect downloads extensions:
+              </Label>
               {/* <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -541,15 +547,22 @@ export function App() {
             <Input
               className="col-span-2 self-center justify-self-end"
               id="auto-event-data-extensions"
-              defaultValue={settings?.["auto-event-data-extensions"] ?? "pdf,csv,docx,xlsx,zip,doc,xls"}
+              defaultValue={
+                settings?.["auto-event-data-extensions"] ??
+                "pdf,csv,docx,xlsx,zip,doc,xls"
+              }
               placeholder="pdf,csv,docx,xlsx,zip,doc,xls"
               onChange={(e) => {
-                const isDefault = e.target.value === "pdf,csv,docx,xlsx,zip,doc,xls" || e.target.value.trim() === "";
+                const isDefault =
+                  e.target.value === "pdf,csv,docx,xlsx,zip,doc,xls" ||
+                  e.target.value.trim() === "";
                 setSettings((prev) =>
                   prev
                     ? {
                         ...prev,
-                        "auto-event-data-extensions": isDefault ? undefined : e.target.value,
+                        "auto-event-data-extensions": isDefault
+                          ? undefined
+                          : e.target.value,
                       }
                     : null,
                 );
@@ -606,7 +619,9 @@ export function App() {
           </div>
           <div className="col-span-4 grid grid-cols-subgrid gap-2">
             <div className="flex items-center gap-2 col-span-2">
-              <Label htmlFor="auto-event-data-full-urls">Collect full URLs:</Label>
+              <Label htmlFor="auto-event-data-full-urls">
+                Collect full URLs:
+              </Label>
               {/* <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -625,7 +640,9 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="auto-event-data-full-urls"
-              defaultChecked={settings?.["auto-event-data-full-urls"] === "true"}
+              defaultChecked={
+                settings?.["auto-event-data-full-urls"] === "true"
+              }
               onChange={(e) => {
                 setSettings((prev) =>
                   prev
