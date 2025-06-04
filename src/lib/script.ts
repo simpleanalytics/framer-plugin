@@ -37,7 +37,7 @@ async function createCollectAttribute() {
     options.push(collectEmailClicks);
   }
 
-  return options.length > 0 ? `data-collect=${options.join(",")}` : undefined;
+  return options.length > 0 ? `data-collect="${options.join(",")}"` : undefined;
 }
 
 async function createAutoEventsAttribute() {
@@ -52,19 +52,19 @@ async function createAutoEventsAttribute() {
   const extensions = await framer.getPluginData("auto-event-data-extensions");
 
   if (extensions) {
-    options.push(`data-extensions=${extensions}`);
+    options.push(`data-extensions="${extensions}"`);
   }
 
   const useTitle = await framer.getPluginData("auto-event-data-use-title");
 
   if (useTitle) {
-    options.push(`data-use-title=${useTitle}`);
+    options.push(`data-use-title="${useTitle}"`);
   }
 
   const fullUrls = await framer.getPluginData("auto-event-data-full-urls");
 
   if (fullUrls) {
-    options.push(`data-full-urls=${fullUrls}`);
+    options.push(`data-full-urls="${fullUrls}`);
   }
 
   return options.length > 0 ? options.join(" ") : "";
@@ -77,7 +77,7 @@ async function createDataAttributes() {
     const value = await framer.getPluginData(attribute);
 
     if (value) {
-      options.push(`${attribute}=${value}`);
+      options.push(`${attribute}="${value}"`);
     }
   }
 
@@ -90,7 +90,6 @@ export async function createScript() {
   const domain =
     (await framer.getPluginData("setting-custom-domain")) ??
     "scripts.simpleanalyticscdn.com";
-  // https://scripts.simpleanalyticscdn.com/auto-events.js
 
   const scripts = [
     `<script async src="https://${domain}/latest.js" ${data}></script>`,

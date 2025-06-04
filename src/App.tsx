@@ -25,20 +25,30 @@ export function App() {
   const customCode = useCustomCode();
   const [settings, setSettings] = useState<Settings | null>(null);
 
-  useEffect(() => {
-    parseSettings().then((settings) => {
-      setSettings(settings);
-    });
-  }, []);
-
   const isInstalled = customCode?.bodyEnd !== null;
 
-  const updateScript = useCallback(async () => {
+  const updateScript = async () => {
     await framer.setCustomCode({
       html: await createScript(),
       location: "bodyEnd",
     });
-  }, []);
+  };
+
+  const updateSetting = async (key: string, value: string | null) => {
+    await framer.setPluginData(key, value);
+    setSettings((prev) => {
+      if (!prev) {
+        return null;
+      }
+
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+
+    updateScript();
+  };
 
   const removeScript = useCallback(async () => {
     await framer.setCustomCode({
@@ -48,10 +58,10 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    updateScript();
-  }, [settings, updateScript]);
+    parseSettings().then((settings) => {
+      setSettings(settings);
+    });
 
-  useEffect(() => {
     if (isInstalled) {
       return;
     }
@@ -99,14 +109,7 @@ export function App() {
               onChange={(e) => {
                 const isDefault = e.target.value === "true";
 
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "data-auto-collect": isDefault ? undefined : "false",
-                      }
-                    : null,
-                );
+                updateSetting("data-auto-collect", isDefault ? null : "false");
               }}
             />
             <div className="col-span-4">
@@ -139,18 +142,12 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="setting-custom-domain"
               value={settings?.["setting-custom-domain"] ?? ""}
-              onChange={(e) => {
+              onBlur={(e) => {
                 const isDefault = e.target.value.trim() === "";
 
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "setting-custom-domain": isDefault
-                          ? undefined
-                          : e.target.value,
-                      }
-                    : null,
+                updateSetting(
+                  "setting-custom-domain",
+                  isDefault ? null : e.target.value,
                 );
               }}
             />
@@ -192,16 +189,9 @@ export function App() {
               id="data-collect-dnt"
               defaultChecked={settings?.["data-collect-dnt"] === "true"}
               onChange={(e) => {
-                const isDefault = e.target.value === "false";
+                const isDefault = e.target.checked === false;
 
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "data-collect-dnt": isDefault ? "true" : undefined,
-                      }
-                    : null,
-                );
+                updateSetting("data-collect-dnt", isDefault ? "true" : null);
               }}
             />
             <div className="col-span-4">
@@ -234,16 +224,9 @@ export function App() {
               id="data-auto-collect"
               defaultChecked={settings?.["data-auto-collect"] !== "false"}
               onChange={(e) => {
-                const isDefault = e.target.value === "true";
+                const isDefault = e.target.checked === true;
 
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "data-auto-collect": isDefault ? undefined : "false",
-                      }
-                    : null,
-                );
+                updateSetting("data-auto-collect", isDefault ? null : "false");
               }}
             />
             <div className="col-span-4">
@@ -276,17 +259,12 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="data-ignore-pages"
               value={settings?.["data-ignore-pages"] ?? ""}
-              onChange={(e) => {
+              onBlur={(e) => {
                 const isDefault = e.target.value.trim() === "";
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "data-ignore-pages": isDefault
-                          ? undefined
-                          : e.target.value,
-                      }
-                    : null,
+
+                updateSetting(
+                  "data-ignore-pages",
+                  isDefault ? null : e.target.value,
                 );
               }}
             />
@@ -320,16 +298,12 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="data-hostname"
               value={settings?.["data-hostname"] ?? ""}
-              onChange={(e) => {
+              onBlur={(e) => {
                 const isDefault = e.target.value.trim() === "";
 
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "data-hostname": isDefault ? undefined : e.target.value,
-                      }
-                    : null,
+                updateSetting(
+                  "data-hostname",
+                  isDefault ? null : e.target.value,
                 );
               }}
             />
@@ -363,14 +337,7 @@ export function App() {
               id="data-mode"
               defaultChecked={settings?.["data-mode"] === "hash"}
               onChange={(e) => {
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "data-mode": e.target.checked ? "hash" : undefined,
-                      }
-                    : null,
-                );
+                updateSetting("data-mode", e.target.checked ? "hash" : null);
               }}
             />
             <div className="col-span-4">
@@ -413,16 +380,9 @@ export function App() {
                 "false"
               }
               onChange={(e) => {
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "auto-event-partial-collect-outbound-links": e.target
-                          .checked
-                          ? undefined
-                          : "false",
-                      }
-                    : null,
+                updateSetting(
+                  "auto-event-partial-collect-outbound-links",
+                  e.target.checked ? null : "false",
                 );
               }}
             />
@@ -460,16 +420,9 @@ export function App() {
                 "false"
               }
               onChange={(e) => {
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "auto-event-partial-collect-email-clicks": e.target
-                          .checked
-                          ? undefined
-                          : "false",
-                      }
-                    : null,
+                updateSetting(
+                  "auto-event-partial-collect-email-clicks",
+                  e.target.checked ? null : "false",
                 );
               }}
             />
@@ -506,15 +459,9 @@ export function App() {
                 settings?.["auto-event-partial-collect-downloads"] !== "false"
               }
               onChange={(e) => {
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "auto-event-partial-collect-downloads": e.target.checked
-                          ? undefined
-                          : "false",
-                      }
-                    : null,
+                updateSetting(
+                  "auto-event-partial-collect-downloads",
+                  e.target.checked ? null : "false",
                 );
               }}
             />
@@ -552,19 +499,14 @@ export function App() {
                 "pdf,csv,docx,xlsx,zip,doc,xls"
               }
               placeholder="pdf,csv,docx,xlsx,zip,doc,xls"
-              onChange={(e) => {
+              onBlur={(e) => {
                 const isDefault =
                   e.target.value === "pdf,csv,docx,xlsx,zip,doc,xls" ||
                   e.target.value.trim() === "";
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "auto-event-data-extensions": isDefault
-                          ? undefined
-                          : e.target.value,
-                      }
-                    : null,
+
+                updateSetting(
+                  "auto-event-data-extensions",
+                  isDefault ? null : e.target.value,
                 );
               }}
             />
@@ -599,15 +541,9 @@ export function App() {
                 settings?.["auto-event-data-use-title"] !== "false"
               }
               onChange={(e) => {
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "auto-event-data-use-title": e.target.checked
-                          ? undefined
-                          : "false",
-                      }
-                    : null,
+                updateSetting(
+                  "auto-event-data-use-title",
+                  e.target.checked ? null : "false",
                 );
               }}
             />
@@ -644,15 +580,9 @@ export function App() {
                 settings?.["auto-event-data-full-urls"] === "true"
               }
               onChange={(e) => {
-                setSettings((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        "auto-event-data-full-urls": e.target.checked
-                          ? "true"
-                          : undefined,
-                      }
-                    : null,
+                updateSetting(
+                  "auto-event-data-full-urls",
+                  e.target.checked ? "true" : null,
                 );
               }}
             />
@@ -666,7 +596,7 @@ export function App() {
         <div className="col-span-4 pb-[15px]">
           <button
             className="framer-button-secondary"
-            onClick={isInstalled ? removeScript : updateScript}
+            onClick={() => (isInstalled ? removeScript : updateSetting)}
           >
             {isInstalled ? "Remove Script" : "Insert Script"}
           </button>
