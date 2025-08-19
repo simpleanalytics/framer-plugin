@@ -64,7 +64,7 @@ async function createAutoEventsAttribute() {
   const fullUrls = await framer.getPluginData("auto-event-data-full-urls");
 
   if (fullUrls) {
-    options.push(`data-full-urls="${fullUrls}`);
+    options.push(`data-full-urls="${fullUrls}"`);
   }
 
   return options.length > 0 ? options.join(" ") : "";

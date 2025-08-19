@@ -25,7 +25,7 @@ export function App() {
   const customCode = useCustomCode();
   const [settings, setSettings] = useState<Settings | null>(null);
 
-  const isInstalled = customCode?.bodyEnd !== null;
+  const isInstalled = customCode?.bodyEnd != null;
 
   const updateScript = async () => {
     await framer.setCustomCode({
@@ -107,9 +107,10 @@ export function App() {
                 settings?.["setting-auto-collect-events"] !== "false"
               }
               onChange={(e) => {
-                const isDefault = e.target.value === "true";
-
-                updateSetting("data-auto-collect", isDefault ? null : "false");
+                updateSetting(
+                  "setting-auto-collect-events",
+                  e.target.checked ? null : "false",
+                );
               }}
             />
             <div className="col-span-4">
@@ -142,6 +143,13 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="setting-custom-domain"
               value={settings?.["setting-custom-domain"] ?? ""}
+              onChange={(e) =>
+                setSettings((prev) =>
+                  prev
+                    ? { ...prev, ["setting-custom-domain"]: e.target.value }
+                    : prev,
+                )
+              }
               onBlur={(e) => {
                 const isDefault = e.target.value.trim() === "";
 
@@ -259,6 +267,13 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="data-ignore-pages"
               value={settings?.["data-ignore-pages"] ?? ""}
+              onChange={(e) =>
+                setSettings((prev) =>
+                  prev
+                    ? { ...prev, ["data-ignore-pages"]: e.target.value }
+                    : prev,
+                )
+              }
               onBlur={(e) => {
                 const isDefault = e.target.value.trim() === "";
 
@@ -298,6 +313,11 @@ export function App() {
               className="col-span-2 self-center justify-self-end"
               id="data-hostname"
               value={settings?.["data-hostname"] ?? ""}
+              onChange={(e) =>
+                setSettings((prev) =>
+                  prev ? { ...prev, ["data-hostname"]: e.target.value } : prev,
+                )
+              }
               onBlur={(e) => {
                 const isDefault = e.target.value.trim() === "";
 
@@ -596,7 +616,7 @@ export function App() {
         <div className="col-span-4 pb-[15px]">
           <button
             className="framer-button-secondary"
-            onClick={() => (isInstalled ? removeScript : updateSetting)}
+            onClick={() => (isInstalled ? removeScript() : updateScript())}
           >
             {isInstalled ? "Remove Script" : "Insert Script"}
           </button>
