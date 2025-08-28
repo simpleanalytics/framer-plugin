@@ -25,16 +25,20 @@ async function createCollectAttribute() {
     "auto-event-partial-collect-email-clicks",
   );
 
-  if (collectDownloads) {
-    options.push(collectDownloads);
+  if (!collectDownloads && !collectOutboundLinks && !collectEmailClicks) {
+    return undefined;
   }
 
-  if (collectOutboundLinks) {
-    options.push(collectOutboundLinks);
+  if (collectDownloads !== "false") {
+    options.push("downloads");
   }
 
-  if (collectEmailClicks) {
-    options.push(collectEmailClicks);
+  if (collectOutboundLinks !== "false") {
+    options.push("outbound");
+  }
+
+  if (collectEmailClicks !== "false") {
+    options.push("emails");
   }
 
   return options.length > 0 ? `data-collect="${options.join(",")}"` : undefined;

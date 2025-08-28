@@ -25,7 +25,8 @@ export function App() {
   const customCode = useCustomCode();
   const [settings, setSettings] = useState<Settings | null>(null);
 
-  const isInstalled = customCode?.bodyEnd != null;
+  const isLoading = !customCode;
+  const isInstalled = customCode?.bodyEnd.html != null;
 
   const updateScript = async () => {
     await framer.setCustomCode({
@@ -62,13 +63,12 @@ export function App() {
       setSettings(settings);
     });
 
-    if (isInstalled) {
+    if (isInstalled || isLoading) {
       return;
     }
 
     updateScript();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isInstalled, isLoading]);
 
   return (
     <main className="grid p-[15px]">
@@ -103,9 +103,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="setting-auto-collect-events"
-              defaultChecked={
-                settings?.["setting-auto-collect-events"] !== "false"
-              }
+              checked={settings?.["setting-auto-collect-events"] !== "false"}
               onChange={(e) => {
                 updateSetting(
                   "setting-auto-collect-events",
@@ -151,11 +149,12 @@ export function App() {
                 )
               }
               onBlur={(e) => {
-                const isDefault = e.target.value.trim() === "";
+                const value = e.target.value.trim();
+                const isDefault = value === "";
 
                 updateSetting(
                   "setting-custom-domain",
-                  isDefault ? null : e.target.value,
+                  isDefault ? null : value,
                 );
               }}
             />
@@ -195,11 +194,12 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="data-collect-dnt"
-              defaultChecked={settings?.["data-collect-dnt"] === "true"}
+              checked={settings?.["data-collect-dnt"] === "true"}
               onChange={(e) => {
-                const isDefault = e.target.checked === false;
-
-                updateSetting("data-collect-dnt", isDefault ? "true" : null);
+                updateSetting(
+                  "data-collect-dnt",
+                  e.target.checked ? "true" : null,
+                );
               }}
             />
             <div className="col-span-4">
@@ -230,7 +230,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="data-auto-collect"
-              defaultChecked={settings?.["data-auto-collect"] !== "false"}
+              checked={settings?.["data-auto-collect"] !== "false"}
               onChange={(e) => {
                 const isDefault = e.target.checked === true;
 
@@ -355,7 +355,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="data-mode"
-              defaultChecked={settings?.["data-mode"] === "hash"}
+              checked={settings?.["data-mode"] === "hash"}
               onChange={(e) => {
                 updateSetting("data-mode", e.target.checked ? "hash" : null);
               }}
@@ -395,7 +395,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="auto-event-partial-collect-outbound-links"
-              defaultChecked={
+              checked={
                 settings?.["auto-event-partial-collect-outbound-links"] !==
                 "false"
               }
@@ -435,7 +435,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="auto-event-partial-collect-email-clicks"
-              defaultChecked={
+              checked={
                 settings?.["auto-event-partial-collect-email-clicks"] !==
                 "false"
               }
@@ -475,7 +475,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="auto-event-partial-collect-downloads"
-              defaultChecked={
+              checked={
                 settings?.["auto-event-partial-collect-downloads"] !== "false"
               }
               onChange={(e) => {
@@ -557,9 +557,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="auto-event-data-use-title"
-              defaultChecked={
-                settings?.["auto-event-data-use-title"] !== "false"
-              }
+              checked={settings?.["auto-event-data-use-title"] !== "false"}
               onChange={(e) => {
                 updateSetting(
                   "auto-event-data-use-title",
@@ -596,9 +594,7 @@ export function App() {
             <Checkbox
               className="col-span-2 self-center justify-self-end"
               id="auto-event-data-full-urls"
-              defaultChecked={
-                settings?.["auto-event-data-full-urls"] === "true"
-              }
+              checked={settings?.["auto-event-data-full-urls"] === "true"}
               onChange={(e) => {
                 updateSetting(
                   "auto-event-data-full-urls",
